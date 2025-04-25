@@ -1,5 +1,6 @@
 package com.libremobileos.freeform.receiver
 
+import android.app.ActivityManager
 import android.app.ActivityOptions
 import android.app.WindowConfiguration
 import android.content.BroadcastReceiver
@@ -43,7 +44,8 @@ class StartFreeformReceiver : BroadcastReceiver() {
             ) == 0
             val isSideBarBroadcast = 
                 intent.getStringExtra("packageName").equals(PACKAGE_NAME)
-            if (isNativeFreeformEnabled && !isSideBarBroadcast) {
+            val shouldUseNativeFreeform = (!ActivityManager.isHighEndGfx() || isNativeFreeformEnabled)
+            if (shouldUseNativeFreeform && !isSideBarBroadcast) {
                 launchAppInNativeFreeform(context, intent)
             } else {
                 launchAppInLMOFreeform(context, intent)
